@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>DermaApp</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/estilosLogin.css" rel="stylesheet" media="all">
+        <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase-app.js"></script>
+    </head>
+    <body>
+        <header class="main-header">
+            <a href="" class="title-header">Derma App</a>
+        </header>
+
+        <div class="login-page">
+            <h2 class="login-title">Login</h2>
+            <div class="form">
+                <form>
+                    <input class="input_login" type="email" id="txtLoginUsuario" name="txtLoginUsuario" placeholder="Email"/>
+                    <span id="noUsername" style="color: #ff182b; font-weight: bold; display: none; text-align: left">Por favor ingrese su nombre de usuario</span>
+                    <input class="input_login" type="password" id="txtLoginClave" name="txtLoginClave" placeholder="Clave"/>
+                    <span id="noPassword" style="color: #ff182b; font-weight: bold; display: none; text-align: left">Por favor ingrese su contraseña</span>
+                    <input class="button_login" type="button" id="btnLogin" value="Login to Account" onclick="login()"/>
+                    <p class="message">Soy nuevo, quiero <a href="registroDermatologo.html">Registrarme</a></p>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+        
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBje_8i495uHrmJE3e95mLEsvh9hdgFF_Y",
+                authDomain: "cancerapp-79383.firebaseapp.com",
+                databaseURL: "https://cancerapp-79383.firebaseio.com",
+                projectId: "cancerapp-79383",
+                storageBucket: "cancerapp-79383.appspot.com",
+                messagingSenderId: "644286998392"
+            };
+            firebase.initializeApp(config);
+        </script>
+
+        <script>
+            function login(){
+                var userEmail = document.getElementById('txtLoginUsuario').value;
+                var userPass = document.getElementById('txtLoginClave').value;
+                
+                //Validar ingreso de datos
+                var banderaUsername = false;
+                var banderaPassword = false;
+                
+                if (userEmail.toString() === ""){
+                    document.getElementById('noUsername').style.display = "block";
+                    banderaUsername = false;
+                }
+                else{
+                    document.getElementById('noUsername').style.display = "none";
+                    banderaUsername = true;
+                }
+                if (userPass.toString() === ""){
+                    document.getElementById('noPassword').style.display = "block";
+                    banderaPassword = false;
+                }
+                else{
+                    document.getElementById('noPassword').style.display = "none";
+                    banderaPassword = true;
+                }
+                
+                if (banderaUsername && banderaPassword){
+                    firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function(error) {
+                    var errorCode = error.code.toString();
+                    var errorMessage = error.message.toString();
+                    
+                    //Mostrar mensaje de error
+                    var mensaje = "";
+                    switch(errorCode){
+                        case "auth/user-not-found": mensaje = "El usuario ingresado no existe"; break;
+                        case "auth/wrong-password": mensaje = "La contraseña no es válida"; break;
+                        case "auth/invalid-email": mensaje = "La dirección de correo electrónico no tiene un formato válido"; break;
+                    }
+                    alert(mensaje);
+                    console.log("Error: " + errorMessage + "\nCódigo: " + errorCode);
+                });
+                }
+            }
+        </script>
+        <script>
+            firebase.auth().onAuthStateChanged(function(user) {
+                var user = firebase.auth().currentUser;
+                if (user) {
+                    // User is signed in.
+                    window.open('dashboard.html','_self',false);
+                } else {
+                    // No user is signed in.
+                    console.log("No logeado");
+                }
+            });
+        </script>
+    </body>
+</html>

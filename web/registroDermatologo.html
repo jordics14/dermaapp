@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Derma App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/estilosRegistro.css" rel="stylesheet" media="all">
+
+        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-firestore.js"></script>
+    </head>
+    <body>
+        <header class="main-header">
+            <a href="" class="title-header">Derma App</a>
+        </header>
+        <div class="page-wrapper p-b-50">
+            <br/>
+            <div class="wrapper wrapper--w900">
+                <div class="card card-6">
+                    <div class="card-heading">
+                        <h2 class="title">Dermatologo</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" name="frm">
+                            <div class="form-row">
+                                <div class="name">CMP</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="text" id="txtCMP" name="txtCMP" maxlength="8" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" required=""/>
+                                    <span id="noCMP" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese su CMP</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Nombres</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="text" id="txtNombres" name="txtNombres" required=""/>
+                                    <span id="noNombres" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese sus nombres</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Apellidos</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="text" id="txtApellidos" name="txtApellidos" required=""/>
+                                    <span id="noApellidos" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese sus apellidos</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Hospital</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="text" id="txtHospital" name="txtHospital" required=""/>
+                                    <span id="noHospital" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese el hospital donde trabaja</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Teléfono</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="text" id="txtTeléfono" name="txtTeléfono" maxlength="9" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" required=""/>
+                                    <span id="noTeléfono" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese su número de teléfono</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Email</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="email" id="txtEmail" name="txtEmail" placeholder="example@email.com" required="">
+                                    <span id="noEmail" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese un email válido</span>
+                                </div>
+                            </div>
+                              
+                            <div class="form-row">
+                                <div class="name">Clave</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="password" id="txtClave" name="txtClave"  pattern=".{6,}" required title="Mínimo 6 caracteres"/>
+                                    <span id="noClave" style="color: #ff182b; font-weight: bold; display: none">Por favor ingrese una contraseña válida (mínimo 6 caracteres)</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="name">Repetir Clave</div>
+                                <div class="value">
+                                    <input class="input--style-6" type="password" id="txtRepetirClave" name="txtRepetirClave" required=""/>
+                                    <span id="noRepetirClave" style="color: #ff182b; font-weight: bold; display: none">Las contraseñas no coinciden</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br/>
+                <div style="text-align: center">
+                    <table style="margin: 0 auto">
+                        <tr>
+                            <td><input class="btn btn--confirm" type="button" id="btnConfirmar" value="CONFIRMAR" onclick="register();"/></td>
+                            <td><input class="btn btn--cancel" type="button" id="btnCancelar" value="CANCELAR" onclick="location.href='index.html'"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+    <script>
+
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBje_8i495uHrmJE3e95mLEsvh9hdgFF_Y",
+            authDomain: "cancerapp-79383.firebaseapp.com",
+            databaseURL: "https://cancerapp-79383.firebaseio.com",
+            projectId: "cancerapp-79383",
+            storageBucket: "cancerapp-79383.appspot.com",
+            messagingSenderId: "644286998392"
+        };
+        firebase.initializeApp(config);
+        const db = firebase.firestore();
+        db.settings(
+            { 
+                timestampsInSnapshots: true
+            }
+        ); 
+    </script>
+
+    <script>   
+        // Initialize Firebase   
+        function register(){
+            //Registar dermatologo
+            var _cmp = document.getElementById('txtCMP').value;
+            var _nombres = document.getElementById('txtNombres').value;
+            var _apelllidos = document.getElementById('txtApellidos').value;
+            var _hospital = document.getElementById('txtHospital').value;
+            var _telefono = document.getElementById('txtTeléfono').value;
+            var _email = document.getElementById('txtEmail').value;
+            var _clave = document.getElementById('txtClave').value;
+            var _repclave = document.getElementById('txtRepetirClave').value;
+            
+            var banderaCMP = false;
+            var banderaNombres = false;
+            var banderaApellidos = false;
+            var banderaHospital = false;
+            var banderaTelefono = false;
+            var banderaEmail = false;
+            var banderaClave = false;
+            var banderaRepetirClave = false;
+            
+            var emailFormat = /^(?:[^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*|"[^\n"]+")@(?:[^<>()[\].,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,63}$/i;
+            
+            if (_cmp.toString() === "")
+            {
+                document.frm.txtCMP.style="border-color: #ff182b";
+                document.getElementById('noCMP').style.display = "block";
+                banderaCMP = false;
+            }
+            else{
+                document.frm.txtCMP.style="border-color: #cccccc";
+                document.getElementById('noCMP').style.display = "none";
+                banderaCMP = true;
+            }
+            if (_nombres.toString() === "")
+            {
+                document.frm.txtNombres.style="border-color: #ff182b";
+                document.getElementById('noNombres').style.display = "block";
+                banderaNombres = false;
+            }
+            else{
+                document.frm.txtNombres.style="border-color: #cccccc";
+                document.getElementById('noNombres').style.display = "none";
+                banderaNombres = true;
+            }
+            if (_apelllidos.toString() === "")
+            {
+                document.frm.txtApellidos.style="border-color: #ff182b";
+                document.getElementById('noApellidos').style.display = "block";
+                banderaApellidos = false;
+            }
+            else{
+                document.frm.txtApellidos.style="border-color: #cccccc";
+                document.getElementById('noApellidos').style.display = "none";
+                banderaApellidos = true;
+            }
+            if (_hospital.toString() === "")
+            {
+                document.frm.txtHospital.style="border-color: #ff182b";
+                document.getElementById('noHospital').style.display = "block";
+                banderaHospital = false;
+            }
+            else{
+                document.frm.txtHospital.style="border-color: #cccccc";
+                document.getElementById('noHospital').style.display = "none";
+                banderaHospital = true;
+            }
+            if (_telefono.toString() === "")
+            {
+                document.frm.txtTeléfono.style="border-color: #ff182b";
+                document.getElementById('noTeléfono').style.display = "block";
+                banderaTelefono = false;
+            }
+            else{
+                document.frm.txtTeléfono.style="border-color: #cccccc";
+                document.getElementById('noTeléfono').style.display = "none";
+                banderaTelefono = true;
+            }
+            if (_email.toString() === "" || !emailFormat.test(_email))
+            {
+                document.frm.txtEmail.style="border-color: #ff182b";
+                document.getElementById('noEmail').style.display = "block";
+                banderaEmail = false;
+            }
+            else{
+                document.frm.txtEmail.style="border-color: #cccccc";
+                document.getElementById('noEmail').style.display = "none";
+                banderaEmail = true;
+            }
+            if (_clave.toString() === "" || _clave.toString().length < 6)
+            {
+                document.frm.txtClave.style="border-color: #ff182b";
+                document.getElementById('noClave').style.display = "block";
+                banderaClave = false;
+            }
+            else{
+                document.frm.txtClave.style="border-color: #cccccc";
+                document.getElementById('noClave').style.display = "none";
+                banderaClave = true;
+            }
+            if (_repclave.toString() === "" || _repclave.toString() !== _clave.toString())
+            {
+                document.frm.txtRepetirClave.style="border-color: #ff182b";
+                document.getElementById('noRepetirClave').style.display = "block";
+                banderaRepetirClave = false;
+            }
+            else{
+                document.frm.txtRepetirClave.style="border-color: #cccccc";
+                document.getElementById('noRepetirClave').style.display = "none";
+                banderaRepetirClave = true;
+            }
+            
+            if(banderaCMP && banderaNombres && banderaApellidos && banderaHospital && banderaTelefono && banderaEmail && banderaClave && banderaRepetirClave){
+                alert("Registro exitoso");
+                //Registrar correo
+                firebase.auth().createUserWithEmailAndPassword(_email, _clave).catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    alert("Error: " + errorMessage + "\nCódigo: " + errorCode);
+                    // ...
+                });
+                //Registrar datos en bd
+                var derm = db.collection("dermatologos").doc(_email).set({
+                     cmp: _cmp,
+                     nombre: _nombres,
+                     apellidos: _apelllidos,
+                     hospital: _hospital,
+                     telefono: _telefono,
+                     email: _email,
+                     clave: _clave
+                });
+                //Redirigir a pantalla de login
+                window.setTimeout(function(){
+                    window.location.href = 'index.html';
+                },1000);
+            }
+        }
+    </script>
+    </body>
+</html>
